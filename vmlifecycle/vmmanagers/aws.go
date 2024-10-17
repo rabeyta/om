@@ -37,6 +37,7 @@ type AWSConfig struct {
 	PrivateIP                 string            `yaml:"private_ip" validate:"omitempty,ip"`
 	VMName                    string            `yaml:"vm_name"`
 	BootDiskSize              string            `yaml:"boot_disk_size"`
+	BootDiskType              string            `yaml:"boot_disk_type"`
 	InstanceType              string            `yaml:"instance_type"`
 	Tags                      map[string]string `yaml:"tags"`
 	AuthenticationType        string            `yaml:"authentication_type"`
@@ -188,6 +189,9 @@ func (a *AWSVMManager) addDefaultConfigFields() {
 	if a.Config.OpsmanConfig.AWS.BootDiskSize == "" {
 		a.Config.OpsmanConfig.AWS.BootDiskSize = "200"
 	}
+	if a.Config.OpsmanConfig.AWS.BootDiskType == "" {
+		a.Config.OpsmanConfig.AWS.BootDiskType = "gp2"
+	}
 	if a.Config.OpsmanConfig.AWS.InstanceType == "" {
 		a.Config.OpsmanConfig.AWS.InstanceType = "m5.large"
 	}
@@ -304,6 +308,7 @@ func (a *AWSVMManager) modifyVolume(volumeID string) error {
 			[]interface{}{
 				"ec2", "modify-volume",
 				"--volume-id", volumeID,
+				"--volume-type", a.Config.OpsmanConfig.AWS.BootDiskType,
 				"--size", a.Config.OpsmanConfig.AWS.BootDiskSize,
 			})
 

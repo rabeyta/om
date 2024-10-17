@@ -49,6 +49,7 @@ opsman-configuration:
     key_pair_name: superuser
     iam_instance_profile_name: awesome-profile
     boot_disk_size: 200
+    boot_disk_type: gp3
     public_ip: %s
     private_ip: %s
     instance_type: m3.large
@@ -108,6 +109,7 @@ opsman-configuration:
 					{ //4
 						`ec2`, `modify-volume`,
 						`--volume-id`, `vol-0cf5b911680a78bb9`,
+						`--volume-type`, `gp3`,
 						`--size`, `200`,
 					},
 					{ //5
@@ -582,6 +584,7 @@ opsman-configuration:
 
 			_, args = runner.ExecuteWithEnvVarsArgsForCall(2)
 			Expect(args).To(ContainElement(MatchRegexp("200")))
+			Expect(args).To(ContainElement(MatchRegexp("gp2")))
 
 		})
 	})
